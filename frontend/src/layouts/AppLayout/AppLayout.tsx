@@ -696,6 +696,10 @@ export const AppLayout = ({ children }: LayoutProps) => {
                       </div>
                     </button>
                   )}
+                <div className="mb-2 w-full pl-5 duration-200 hover:text-mineshaft-200">
+                  <FontAwesomeIcon icon={faInfinity} className="mr-3 px-[0.1rem]" />
+                  Version: v3.2.1
+                </div>
               </div>
             </nav>
           </aside>
