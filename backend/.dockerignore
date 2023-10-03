@@ -9,3 +9,4 @@ docker-compose.*
 .DS_Store
 *.swp
 *~
+version.txt

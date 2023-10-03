@@ -11,13 +11,15 @@ jobs:
     steps:
       - name: Debugging Info
         run: |
-          echo "User: $GITHUB_ACTOR"
-          echo "Organization: $GITHUB_REPOSITORY_OWNER"
-          echo "Repository: $GITHUB_REPOSITORY"
+          echo "User: ${{ github.actor }}"
+          echo "Organization: ${{ github.repository_owner }}"
+          echo "Repository: ${{ github.repository }}"
           echo "Permissions: $(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_REPOSITORY/collaborators/$GITHUB_ACTOR/permission)"
       - name: Extract version from tag
         id: extract_version
         run: echo "::set-output name=version::${GITHUB_REF_NAME#infisical/}"
+      - name: Create version file
+        run: echo "${{ steps.extract_version.outputs.version }}" > version.txt
       - name: ☁️ Checkout source
         uses: actions/checkout@v3
       - name: 📦 Install dependencies to test all dependencies

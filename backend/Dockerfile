@@ -30,6 +30,7 @@ COPY package*.json ./
 RUN npm ci --only-production && npm cache clean --force
 
 COPY --from=build /app .
+COPY version.txt .
 
 RUN retries_left=$MAX_RETRIES; \
     for mirror in $ALPINE_MIRRORS; do \
