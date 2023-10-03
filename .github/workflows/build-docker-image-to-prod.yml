@@ -9,6 +9,12 @@ jobs:
     name: Build backend image
     runs-on: ubuntu-latest
     steps:
+      - name: Debugging Info
+        run: |
+          echo "User: $GITHUB_ACTOR"
+          echo "Organization: $GITHUB_REPOSITORY_OWNER"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Permissions: $(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_REPOSITORY/collaborators/$GITHUB_ACTOR/permission)"
       - name: Extract version from tag
         id: extract_version
         run: echo "::set-output name=version::${GITHUB_REF_NAME#infisical/}"
@@ -59,9 +65,11 @@ jobs:
           tags: |
             infisical/backend:${{ steps.commit.outputs.short }}
             infisical/backend:latest
-            infisical/backend:${{ steps.extract_version.outputs.version }}
           platforms: linux/amd64,linux/arm64
-
+          build-args: |
+            VERSION=${{ steps.extract_version.outputs.version }}
+          labels: |
+            version=${{ steps.extract_version.outputs.version }}
   frontend-image:
     name: Build frontend image
     runs-on: ubuntu-latest
@@ -112,7 +120,9 @@ jobs:
           tags: |
             infisical/frontend:${{ steps.commit.outputs.short }}
             infisical/frontend:latest
-            infisical/frontend:${{ steps.extract_version.outputs.version }}
           platforms: linux/amd64,linux/arm64
           build-args: |
+            VERSION=${{ steps.extract_version.outputs.version }}
             POSTHOG_API_KEY=${{ secrets.PUBLIC_POSTHOG_API_KEY }}
+          labels: |
+            version=${{ steps.extract_version.outputs.version }}
